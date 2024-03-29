@@ -1,0 +1,15 @@
+name: ItemProp
+version: '${version}'
+main: com.github.cinnaio.itemprop.ItemProp
+api-version: '1.20'
+author: 'Cinnaio'
+commands:
+  itemprop:
+    aliases: ['ip']
+permissions:
+  itemprop.command.reload:
+    description: '插件重载'
+  itemprop.command.list:
+    description: '查看定义设备数量'
+  itemprop.command.add:
+    description: '添加标记'

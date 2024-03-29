@@ -1,0 +1,14 @@
+# Cinnaio 编写于 2024年3月29日
+items:
+  leaf:
+    # 数量默认为 1
+    amount: 1
+    # 执行方式可选 -as:[op/console/player]
+    expression: 'give %player% diamond -as:op'
+    # 默认效果等级为 1
+    # 自定义等级需要用 "#" 隔开
+    effects:
+      - speed#2
+      - strength#3
+    paymoney: 100
+    payexp: 50
