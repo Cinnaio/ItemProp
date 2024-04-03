@@ -20,11 +20,16 @@ repositories {
         name = "codemc-repo"
         url = "https://repo.codemc.org/repository/maven-public/"
     }
+    maven {
+        name = "jitpack"
+        url = "https://jitpack.io/"
+    }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT"
     compileOnly "de.tr7zw:item-nbt-api-plugin:2.12.2"
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
     implementation 'org.yaml:snakeyaml:1.29'
 }
 
@@ -60,4 +65,5 @@ shadowJar {
     archiveClassifier.set('')
     archiveVersion.set('1.0.0')
     destinationDirectory = file('E:\\Workship\\Leisure\\mc server\\plugins')
+//    exclude("com.github.MilkBowl:VaultAPI")
 }

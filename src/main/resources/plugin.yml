@@ -3,6 +3,7 @@ version: '${version}'
 main: com.github.cinnaio.itemprop.ItemProp
 api-version: '1.20'
 author: 'Cinnaio'
+depend: ['Vault']
 commands:
   itemprop:
     aliases: ['ip']

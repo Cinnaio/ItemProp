@@ -1,0 +1,14 @@
+error:
+  effect_format: '错误的药水格式: {0}'
+  effect_type: '错误的药水效果名称: {0}'
+  command_sender: '错误的命令执行者: {0}'
+  expression_format: '命令格式错误: {0}'
+  scarcity_money: '经验缺少: {0}'
+  scarcity_exp: '金币缺少: {0}'
+  add: '标签 {0} 已经存在于目录 {1} 中，请重新添加!'
+
+success:
+  bind: '标签添加成功!'
+  reload: '插件重载成功!'
+  getmeta: '手上物品的标签: {0}'
+  add: '标签 {0} 成功添加到目录 {1} 中!'

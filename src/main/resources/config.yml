@@ -1,6 +1,6 @@
 # ItemProp 2024/3/28
 # develop by Cinnaio
 prefix:
-  enable: 'true'
-  context: 'ItemProp'
+  enable: true
+  context: '&a[ItemProp] '
 

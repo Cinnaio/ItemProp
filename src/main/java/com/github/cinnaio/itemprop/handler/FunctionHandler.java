@@ -1,7 +1,8 @@
 package com.github.cinnaio.itemprop.handler;
 
 import com.github.cinnaio.itemprop.ItemProp;
-import org.bukkit.Effect;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -12,22 +13,29 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
+
+import static com.github.cinnaio.itemprop.handler.i18Handler.*;
+import static com.github.cinnaio.itemprop.utils.MessageUtils.sendMessage;
 
 public class FunctionHandler {
     private static final JavaPlugin ins = ItemProp.getInstance();
 
-    public static void addCustomTag(Player p, String n) {
+    public static void addCustomTag(Player p, String n1, String n2) {
         ItemStack itemStack = p.getInventory().getItemInMainHand();
         ItemMeta itemMeta = itemStack.getItemMeta();
 
-        NamespacedKey key = new NamespacedKey(ins, n);
-        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, n);
+        NamespacedKey key = new NamespacedKey(ins, n2);
+        itemMeta.getPersistentDataContainer().set(key, PersistentDataType.STRING, n2);
         itemStack.setItemMeta(itemMeta);
 
         p.getInventory().setItemInMainHand(itemStack);
+
+        ItemProp.getFileHandler().addTagToFile(n1, n2, p);
     }
 
     public static boolean ckeckCustomTag(PlayerInteractEvent e) {
@@ -62,37 +70,114 @@ public class FunctionHandler {
         p.getInventory().getItemInMainHand().setAmount(amount + amt);
     }
 
+    public static void modifyMoney(int money, Player p) {
+        Economy economy = ItemProp.getEconomy();
+
+        if (economy != null)
+            economy.withdrawPlayer(p, money);
+    }
+
     public static void addMaterial(Material material, Player p, int amount) {
         ItemStack itemStack = new ItemStack(material, amount);
 
         p.getInventory().addItem(itemStack);
     }
 
-    public static void giveEffects(ArrayList<String> effects, Player p) {
-        for (String effect : effects) {
-            String[] parts = effect.split("#");
-            if (parts.length == 2) {
+    public static void executeEffects(ArrayList<?> effects, Player p) {
+        for (Object effect : effects) {
+            String[] parts = effect.toString().split("#");
+
+            if (parts.length == 3) {
                 String effectName = parts[0];
                 int effectLevel = Integer.parseInt(parts[1]);
+                int effectTime = Integer.parseInt(parts[2]);
 
-                // 将效果应用到玩家
-                applyEffect(effectName, effectLevel, p);
+                applyEffect(effectName, effectLevel, p, effectTime);
             } else {
-                // 如果格式不正确，忽略此效果
-                System.out.println("Invalid effect format: " + effect);
+                sendMessage(p, (effect_format + inferiorColor).replace("{0}", "&n" + effect));
             }
         }
     }
 
-    public static void applyEffect(String effectName, int effectLevel, Player p) {
-        // 根据效果名称获取 PotionEffectType
+    public static void applyEffect(String effectName, int effectLevel, Player p, int effectTime) {
         PotionEffectType effectType = PotionEffectType.getByName(effectName.toUpperCase());
+
         if (effectType != null) {
-            // 创建 PotionEffect 并应用到玩家
-            PotionEffect effect = new PotionEffect(effectType, Integer.MAX_VALUE, effectLevel - 1);
+            PotionEffect effect = new PotionEffect(effectType, effectTime * 20, effectLevel - 1);
             p.addPotionEffect(effect);
         } else {
-            System.out.println("Unknown effect type: " + effectName);
+            sendMessage(p, (effect_type + inferiorColor).replace("{0}", "&n" + effectName));
         }
+    }
+
+    public static void executeCommand(ArrayList<String> expression, Player p) {
+        for (String expr : expression) {
+            String[] parts = expr.split("-as:");
+
+            if (parts.length == 2) {
+                String command = parts[0];
+                String executionMode = parts[1].toLowerCase();
+
+                if (command.contains("%player%")) {
+                    command = command.replace("%player%", p.getName());
+                }
+
+                switch (executionMode) {
+                    case "op": {
+                        if (!p.isOp()) {
+                            p.setOp(true);
+                            p.performCommand(command);
+                            p.setOp(false);
+                        } else {
+                            p.performCommand(command);
+                        }
+
+                        break;
+                    }
+                    case "console": {
+                        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), command);
+                        break;
+                    }
+                    case "player": {
+                        p.performCommand(command);
+                        break;
+                    }
+                    default:
+                        sendMessage(p, (command_sender + inferiorColor).replace("{0}", "&n" + executionMode));
+                        break;
+                }
+            } else {
+                sendMessage(p, (expression_format + inferiorColor).replace("{0}", "&n" + expr));
+            }
+        }
+    }
+
+    public static HashMap<String, Object> getTag(String tag) {
+        HashMap<String, Object> map = ItemProp.getFileHandler().getMap();
+        HashMap<String, Object> mapSpecialTag = new HashMap<>();
+
+        for (String tags : map.keySet()) {
+            if (tags.startsWith("tags.")) {
+                continue;
+            }
+
+            String[] tagg = tags.split("\\.");
+            if (!(tagg.length >= 3 && tagg[2].equals(tag)))
+                continue;
+
+            mapSpecialTag.put(tagg[3], map.get(tags));
+        }
+        return mapSpecialTag;
+    }
+
+    public static String getItemTag(@NotNull Set<NamespacedKey> namespacedKey) {
+        for (Object object : namespacedKey) {
+            String[] strings = object.toString().split(":");
+
+            if (strings[0].equals("itemprop"))
+                return strings[1];
+        }
+
+        return null;
     }
 }

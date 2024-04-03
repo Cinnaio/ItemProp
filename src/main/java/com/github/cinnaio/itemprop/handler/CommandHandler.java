@@ -1,7 +1,6 @@
 package com.github.cinnaio.itemprop.handler;
 
 import com.github.cinnaio.itemprop.ItemProp;
-import com.github.cinnaio.itemprop.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -9,9 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.cinnaio.itemprop.handler.i18Handler.*;
+import static com.github.cinnaio.itemprop.utils.MessageUtils.sendMessage;
 
 public class CommandHandler implements TabExecutor {
     private final JavaPlugin ins = ItemProp.getInstance();
@@ -23,15 +24,15 @@ public class CommandHandler implements TabExecutor {
         switch (args[0]) {
             case "reload" : {
                 ItemProp.getFileHandler().reload(ins);
-                MessageUtils.sendMessage(sender, "重载成功!");
-                break;
-            }
-            case "list" : {
-                sender.sendMessage("bbbb");
+                sendMessage((Player) sender, reload);
                 break;
             }
             case "add" : {
-                FunctionHandler.addCustomTag((Player) sender, args[1]);
+                FunctionHandler.addCustomTag((Player) sender, args[1], args[2]);
+                break;
+            }
+            case "getmeta" : {
+                sendMessage((Player) sender, (getmeta + inferiorColor).replace("{0}", "&n" + ((Player) sender).getInventory().getItemInMainHand().getItemMeta().getAsString()));
                 break;
             }
             default : {
@@ -46,10 +47,10 @@ public class CommandHandler implements TabExecutor {
 
         if (args.length == 1) {
             completions.add("reload");
-            completions.add("list");
             completions.add("add");
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("add")) {
-            completions.add("[context]");
+            completions.add("getmeta");
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("add")) {
+            completions.add("目录名 标签名");
         }
 
         return completions;
