@@ -1,0 +1,28 @@
+# ItemProp 配置文件
+
+# 在这里定义你的物品行为
+# 格式:
+# items:
+#   <自定义ID>:
+#     commands:  # 执行的动作列表
+#       - "[title] &a主标题 | &e副标题"  # 发送标题
+#       - "[message] &b这是一条消息"      # 发送消息
+#       - "[console] give %player% diamond 1" # 控制台执行
+#       - "[op] gamemode creative"        # 临时OP权限执行
+#       - "[player] spawn"                # 玩家身份执行 (默认)
+#     consume: true # 是否消耗物品 (默认为 false)
+
+items:
+  example_item:
+    commands:
+      - "[title] &#FF5555欢&#FF7777迎&#FF9999使&#FFBBBB用! | &7这是一个示例物品"
+      - "[message] &#00FFAA你获得了一颗钻石！"
+      - "[console] give %player% diamond 1"
+    consume: true
+
+  admin_tool:
+    commands:
+      - "[op] time set day"
+      - "[message] &a时间已设置为白天"
+      - "[potion] SPEED 10 2" # 给予速度 II 效果，持续 10 秒
+    consume: false

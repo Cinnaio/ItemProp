@@ -1,0 +1,19 @@
+name: ItemProp
+version: '1.0-SNAPSHOT'
+main: com.github.cinnaio.itemProp.ItemProp
+api-version: '1.21'
+author: 'Cinnaio'
+commands:
+  itemprop:
+    description: 管理物品绑定、名称、Lore 和 NBT 查看
+    usage: /itemprop <bind|name|lore|check|nbt|reload> [args]
+    aliases: [ipp]
+    permission: itemprop.use
+    permission-message: 你没有权限使用此命令
+permissions:
+  itemprop.use:
+    description: 允许使用 itemprop 命令
+    default: op
+  itemprop.admin:
+    description: 允许重载配置
+    default: op
