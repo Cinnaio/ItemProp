@@ -1,11 +1,9 @@
 package com.github.cinnaio.itemProp;
 
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.io.File;
 
-public class ConfigWatcher extends BukkitRunnable {
+public class ConfigWatcher implements Runnable {
 
     private final Plugin plugin;
     private final File configFile;

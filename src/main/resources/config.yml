@@ -20,9 +20,16 @@ items:
       - "[console] give %player% diamond 1"
     consume: true
 
-  admin_tool:
+  player_tracker:
     commands:
-      - "[op] time set day"
-      - "[message] &a时间已设置为白天"
-      - "[potion] SPEED 10 2" # 给予速度 II 效果，持续 10 秒
+      - "[message] &e你点击了玩家: &a%right_clicked_player%"
+      - "[title] &6目标锁定 | &e%right_clicked_player%"
     consume: false
+
+  # 示例：仅当命令成功时消耗
+  success_check_item:
+    commands:
+      # 如果此命令返回 false 或输出为空，物品将不会被消耗
+      - "[console] give %player% diamond 1"
+    consume: true
+    require_success: true # 开启成功检查 (默认为 false)
